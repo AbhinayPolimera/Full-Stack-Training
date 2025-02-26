@@ -1,0 +1,253 @@
+/**
+ * @return {Function}
+ */
+var createHelloWorld = function() {
+    let hello = "Hello World";
+    return function(...args) {
+        return hello;
+    }
+};
+
+/**
+ * const f = createHelloWorld();
+ * f(); // "Hello World"
+ */
+
+
+/**
+ * @param {number} n
+ * @return {Function} counter
+ */
+var createCounter = function(n) {
+    
+    return function() {
+        return n++;
+    };
+};
+
+/**
+ * @param {string} val
+ * @return {Object}
+ */
+var expect = function(val) {
+    let toBe = function(val1) {
+        if(val === val1){
+            return true;
+        }else{
+            throw new Error("Not Equal") ;
+        }
+    }
+
+    let notToBe = function(val2) {
+        if(val !== val2){
+            return true;
+        }else{
+            throw new Error("Equal");
+        }
+    } 
+
+    return{
+        toBe,
+        notToBe
+    }
+};
+
+/**
+ * expect(5).toBe(5); // true
+ * expect(5).notToBe(5); // throws "Equal"
+ */
+
+/**
+ * @param {number[]} arr
+ * @param {Function} fn
+ * @return {number[]}
+ */
+var map = function(arr, fn) {
+    let newArr = arr.map(fn)
+    function plusone(n){
+        return n+1;
+    }
+    function plusI(n, i){
+        return n+i;
+    }
+    function constant(n, i){
+        return 42;
+    }
+
+    return newArr;
+};
+
+/**
+ * @param {number[]} arr
+ * @param {Function} fn
+ * @return {number[]}
+ */
+var filter = function(arr, fn) {
+    let newArr = arr.filter(fn);
+    greaterThan10: (n) => {
+        return n > 10;
+    }
+    firstIndex: (n, i) => {
+        return i === 0;
+    }
+    plusOne: (n) => {
+        return n + 1;
+    }
+    return newArr;
+};
+
+/**
+ * @param {number[]} nums
+ * @param {Function} fn
+ * @param {number} init
+ * @return {number}
+ */
+var reduce = function(nums, fn, init) {
+    let val = init
+    for (let i = 0; i < nums.length; i++) {
+       val = fn(val, nums[i])
+    }
+    return val
+};
+
+/**
+ * @param {Function[]} functions
+ * @return {Function}
+ */
+var compose = function(functions) {
+    // let result = x;
+    // if {
+    //     funtions = [];
+    //     return result;
+    // }
+    // else{
+        // for(let i = functions.length - 1; i >= 0; i--){
+        //     result = functions[i](result);
+        // }
+    // }
+    return function(x){
+        let result = x;
+        for(let i = functions.length - 1; i >= 0; i--){
+            result = functions[i](result);
+        }
+
+        return result;
+    };
+    
+};
+
+/**
+ * @param {...(null|boolean|number|string|Array|Object)} args
+ * @return {number}
+ */
+var argumentsLength = function(...args) {
+    return args.length;
+};
+
+/**
+ * @param {Function} fn
+ * @return {Function}
+ */
+var once = function(fn) {
+    let functioncall = false;
+    let result = 0;
+
+    return function(...args){
+            if (!functioncall){
+                result = fn.apply(this, args);
+                functioncall = true;
+                return result;
+            }
+        
+    };
+        
+        
+    
+};
+
+/**
+ * @param {Promise} promise1
+ * @param {Promise} promise2
+ * @return {Promise}
+ */
+var addTwoPromises = async function(promise1, promise2) {
+    return Promise.all([promise1, promise2]).then(([result1, result2]) => {
+        return result1 + result2;
+    });
+
+
+
+//     promise1.then((value1) => {
+//         return promise2.then((value2) => {
+//             return value1 + value2;
+//         });
+//     }).then((result) => {
+//     console.log(`The sum of two number is:${result.toString()}`);
+// }).catch((error) => {
+//     console.error(error);
+// });
+};
+
+/**
+ * @param {number} millis
+ * @return {Promise}
+ */
+async function sleep(millis) {
+    return new Promise(resolve => setTimeout(resolve, millis));
+}
+
+/**
+ * @param {Function} fn
+ * @param {Array} args
+ * @param {number} t
+ * @return {Function}
+ */
+var cancellable = function(fn, args, t) {
+    let time = setTimeout(() => {
+        fn(...args);
+    }, t)
+
+    return function cancelFn() {
+        clearTimeout(time);
+    };
+};
+
+/**
+ * @param {Object|Array} obj
+ * @return {boolean}
+ */
+var isEmpty = function(obj) {
+    // if (obj !== ){
+    //     return false;
+    // }else{
+    //     return true;
+    // }
+    return Object.keys(obj).length === 0;
+};
+
+/**
+ * @param {Array} arr
+ * @param {number} size
+ * @return {Array}
+ */
+var chunk = function(arr, size) {
+    let chunkArr = [];
+    for(let i = 0; i < arr.length; i += size){
+        chunkArr.push(arr.slice(i, i + size));
+    }
+    return chunkArr;
+};
+
+/**
+ * @return {null|boolean|number|string|Array|Object}
+ */
+Array.prototype.last = function() {
+    
+    if (this.length === 0){
+        return  -1;
+    }
+    else{
+        return this[this.length - 1];
+    }
+};
+
